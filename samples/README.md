@@ -8,9 +8,9 @@ Utility to send commands to VMs via serial consoles using Libvirt API.
 
 - deploy [FreeDOS](https://freedos.org) VM with serial console. To acivate serial console run:
 
-    ctty com1
+        ctty com1
 
-- make it available via libvirt
+- make this VM server available by libvirt URI like "qemu+ssh://root@192.168.1.1/system"
 - install vmexec or make it available
 - copy config file 'config.sh' from template 'config.sh.sample'
 - edit config file 'config.sh'
