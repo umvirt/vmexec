@@ -1,0 +1,153 @@
+#!/usr/bin/env python
+
+import json
+import libvirt
+import sys
+import time
+import argparse
+
+# Functions
+
+def stream2lines(stream):
+   global data_
+   #global rows_
+
+   if stream and data_:
+    for c in stream:
+       #print(c)
+       if ord(c)==13:
+          rows.append(data_.strip())
+#          print ('['+data_+']')
+          data_=" "
+       else:
+#          print(ord(c))
+          if ord(c)>30:
+             data_=str(data_)+str(c)
+#             print (data_)
+#    else:
+#       data_="_"
+
+def expect(str):
+   global row
+   for row in rows:
+      if str in row:
+         return 1
+
+
+def stream_callback(stream, data, opaque):
+    sys.stdout.write(data.decode('utf-8', errors='ignore'))
+    sys.stdout.flush()
+
+
+# send command to console
+def sendcommand(cmd,expectdata=""):
+    # prepare command
+    data = cmd+" \r\n"
+    # send command
+    # print debug message
+    #if expectdata:
+        # print debug message
+    #    print (' > : sending "' + str(cmd) + '" and  waiting for expected response...', end='')
+    #else:
+    #    print (' > : sending "' + str(cmd) + '"')
+
+    stream.send(data.encode())
+
+    time.sleep(1)
+    if expectdata:
+        # init buffer
+        data_=" "
+
+        # Receive data using a callback or synchronous read
+        while True:
+            try:
+                #set timeout
+#                stream.settimeout(1)
+                # get data from console
+                data = stream.recv(1024)
+                # if no data
+                if not data:
+                # stop recieving
+                    break
+                stream2lines(data.decode('utf-8', errors='ignore'))
+                #if "\n" in data_:
+                #   print ('['+data_.strip()+']')
+                #   data_=""
+                #print(data.decode('utf-8', errors='ignore'), end='')
+
+                #print stored rows
+                #print (rows)
+
+                #if expected data found
+                if expect(expectdata):
+                    #print ('')
+                    # print debug message
+                    print (' i : "'+expectdata+'" found!')
+                    # stop recieving
+                    break;
+
+#                else:
+#                    print (".", end="")
+                    # print debug message
+                    #print (' i : "'+expectdata+'" not found')
+
+#                time.sleep (1)
+
+            except libvirt.libvirtError:
+                break
+#            print ("__" + data_ + "__"+str(time.time()))
+
+# Main code
+
+# parse arguments
+parser = argparse.ArgumentParser(description="VMexec script")
+
+parser.add_argument("--server", help="Libvirt Server URI")
+parser.add_argument("--vm", help="Libvirt Server URI")
+parser.add_argument("--command", help="command to send")
+parser.add_argument("--expect", help="expected string", default="")
+
+args = parser.parse_args()
+
+#print(args.command)
+
+cmd={}
+
+cmd["cmd"]=args.command;
+if args.expect:
+    cmd["expect"]=args.expect
+
+if not(args.server):
+    print (' e : Server URI is not provided')
+    exit();
+
+if not(args.vm):
+    print (' e : Virtual Machine name is not provided')
+    exit();
+
+
+# connect to libvirt server
+conn = libvirt.open(args.server)
+# find VM
+dom = conn.lookupByName(args.vm)
+# connect to VM
+stream = conn.newStream()
+# Open the serial console (using 'serial0' or similar console name)
+dom.openConsole(None, stream, 0)
+# init rows
+rows=[]
+
+#init expect buffer
+data_=" "
+
+# Now 'data' is a standard Python dictionary or list
+#print(data)
+
+if('expect' in cmd):
+    print (' > : sending "' + str(cmd['cmd']) + '" and  waiting for expected response...')
+    sendcommand(cmd['cmd'],cmd['expect'])
+else:
+    print (' > : sending "' + str(cmd['cmd']) + '"')
+    sendcommand(cmd['cmd'])
+
+
