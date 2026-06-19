@@ -22,6 +22,7 @@ parser.add_argument("--cad", help="send Ctrl-Alt-Delete", action='store_true')
 parser.add_argument("--enter", help="send Enter after typing", action='store_true')
 parser.add_argument("--rightshift", help="use Right Shift key for upper case", action='store_true')
 parser.add_argument("--delay", help="make a delay after typing a character (in seconds)", default='0')
+parser.add_argument("--verbose", help="debug mode", action='store_true')
 
 args = parser.parse_args()
 
@@ -154,10 +155,12 @@ if (args.text):
     ' ':[57]
     }
 
-    print(args.text)
+    if args.verbose:
+        print(args.text)
     for char in args.text:
         key=ord(char)
-        print(key)
+        if args.verbose:
+            print(key)
         keycodes = keymap[char]
         dom.sendKey(0, 0, keycodes, len(keycodes), 0)
         keycodes = []

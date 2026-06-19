@@ -2,7 +2,7 @@
 
 Utilities to interact with VMs via serial console and keyboard using Libvirt API.
 
-Version: 0.2
+Version: 0.3
 
 License: GPL
 
@@ -35,11 +35,19 @@ VMexec can be used for:
 
 ## Installation
 
+### Serial port and keyboard interaction
+
 - Install modern GNU/Linux distribution on client machine
 - Install libvirt package
 - Install libvirt python3 bindings package
 - Install virt-manager
 - Copy 'vmexec' file in /usr/bin or other directory mentioned in $PATH environment variable
+
+### Screenshot interaction
+
+- [Python Pillow module](https://pypi.org/project/pillow) (to convert screenshots from PNM to PNG)
+- [libsixel](https://github.com/saitoha/libsixel) with Python module (to render screenshots in terminal)
+- KDE Konsole or other terminal with libsixel support (others can't render screenshots in terminal)
 
 ## Preparation
 

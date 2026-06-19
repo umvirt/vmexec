@@ -57,4 +57,17 @@ Keyboard samples shows an interaction with VM with keyboard
    - run command in serial console
    - switch back to keyboard
 
+### Screen
 
+Screenshot manipulation samples
+
+#### Preparation
+
+This samples uses FreeDOS VM which created for Keyoard samples.
+
+#### Runing
+
+- shot2file.sh - Save a source VM screenshot in PNM format
+- shot.sh - Save a VM screenshot in PNG format
+- sixelshot.sh - render a VM screenshot in current terminal via Sixel protocol
+- sixel.sh - a Sixel protocol demo with keyboard interaction

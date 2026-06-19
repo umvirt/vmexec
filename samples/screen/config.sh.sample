@@ -1,0 +1,8 @@
+# Path to vmshot executable
+VMSHOT_CMD="../../vmshot"
+# Path to vmpress executable
+VMPRESS_CMD="../../vmpress"
+# Sample VM Server URI
+SAMPLE_VM_SERVER="qemu+ssh://root@192.168.1.1/system"
+# Sample VM name (libvirt domain)
+SAMPLE_VM_NAME="freedos"
