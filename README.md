@@ -1,8 +1,8 @@
 # Umvirt VMexec
 
-Utility to send commands to VMs via serial consoles using Libvirt API.
+Utilities to interact with VMs via serial console and keyboard using Libvirt API.
 
-Version: 0.1
+Version: 0.2
 
 License: GPL
 
@@ -14,7 +14,7 @@ There are many ways to send commans to VM:
 - It's possible to download scripts with commands (wget, curl) and pass them to interpreters (bash, python, perl, php).
 - It's possible to redirect serial port to socket/pipe to send commands to VMs serial port via Telnet.
 
-VMexec is another utility written on Python which connects to VM and send commands over serial port console using libvirt interface.
+VMexec is utilities written on Python which connects to VM and send commands over serial port console and keyboard using libvirt interface.
 
 ## Features
 

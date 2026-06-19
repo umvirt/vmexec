@@ -1,0 +1,170 @@
+#!/usr/bin/env python
+
+import json
+import libvirt
+import sys
+import time
+import argparse
+
+# Main code
+
+# parse arguments
+parser = argparse.ArgumentParser(
+prog="vmpress",
+description="Virtual machine keyboard interface"
+)
+
+parser.add_argument("--server", help="Libvirt Server URI")
+parser.add_argument("--vm", help="Libvirt Server URI")
+parser.add_argument("text", help="text to send", nargs='?')
+#parser.add_argument("--expect", help="expected string", default="")
+parser.add_argument("--cad", help="send Ctrl-Alt-Delete", action='store_true')
+parser.add_argument("--enter", help="send Enter after typing", action='store_true')
+parser.add_argument("--rightshift", help="use Right Shift key for upper case", action='store_true')
+parser.add_argument("--delay", help="make a delay after typing a character (in seconds)", default='0')
+
+args = parser.parse_args()
+
+
+cmd={}
+
+cmd["cmd"]=args.text;
+#if args.expect:
+#    cmd["expect"]=args.expect
+
+if not(args.server):
+    print (' e : Server URI is not provided')
+    exit();
+
+if not(args.vm):
+    print (' e : Virtual Machine name is not provided')
+    exit();
+
+
+# connect to libvirt server
+conn = libvirt.open(args.server)
+# find VM
+dom = conn.lookupByName(args.vm)
+
+if args.cad:
+    keycodes = [29, 56, 83]
+    dom.sendKey(0, 0, keycodes, len(keycodes), 0)
+
+if (args.text):
+
+    #keycode mapper (based on /usr/include/linux/input-event-codes.h)
+    shift=42
+    if args.rightshift:
+        shift=54
+    keymap={
+    '`':[41],
+    '~':[shift,41],
+    '0':[11],
+    '1':[2],
+    '2':[3],
+    '3':[4],
+    '4':[5],
+    '5':[6],
+    '6':[7],
+    '7':[8],
+    '8':[9],
+    '9':[10],
+    ')':[shift,11],
+    '!':[shift,2],
+    '@':[shift,3],
+    '#':[shift,4],
+    '$':[shift,5],
+    '%':[shift,6],
+    '^':[shift,7],
+    '&':[shift,8],
+    '*':[shift,9],
+    '(':[shift,10],
+    '-':[12],
+    '_':[shift,12],
+    '=':[13],
+    '+':[shift,13],
+    'q':[16],
+    'w':[17],
+    'e':[18],
+    'r':[19],
+    't':[20],
+    'y':[21],
+    'u':[22],
+    'i':[23],
+    'o':[24],
+    'p':[25],
+    'Q':[shift,16],
+    'W':[shift,17],
+    'E':[shift,18],
+    'R':[shift,19],
+    'T':[shift,20],
+    'Y':[shift,21],
+    'U':[shift,22],
+    'I':[shift,23],
+    'O':[shift,24],
+    'P':[shift,25],
+    '[':[26],
+    ']':[27],
+    "\\":[43],
+    '{':[shift,26],
+    '}':[shift,27],
+    '|':[shift,43],
+    'a':[30],
+    's':[31],
+    'd':[32],
+    'f':[33],
+    'g':[34],
+    'h':[35],
+    'j':[36],
+    'k':[37],
+    'l':[38],
+    'A':[shift,30],
+    'S':[shift,31],
+    'D':[shift,32],
+    'F':[shift,33],
+    'G':[shift,34],
+    'H':[shift,35],
+    'J':[shift,36],
+    'K':[shift,37],
+    'L':[shift,38],
+    ';':[39],
+    "\'":[40],
+    ':':[shift,39],
+    '"':[shift,40],
+    'z':[44],
+    'x':[45],
+    'c':[46],
+    'v':[47],
+    'b':[48],
+    'n':[49],
+    'm':[50],
+    'Z':[shift,44],
+    'X':[shift,45],
+    'C':[shift,46],
+    'V':[shift,47],
+    'B':[shift,48],
+    'N':[shift,49],
+    'M':[shift,50],
+    ',':[51],
+    '.':[52],
+    '/':[53],
+    '<':[shift,51],
+    '>':[shift,52],
+    '?':[shift,53],
+    ' ':[57]
+    }
+
+    print(args.text)
+    for char in args.text:
+        key=ord(char)
+        print(key)
+        keycodes = keymap[char]
+        dom.sendKey(0, 0, keycodes, len(keycodes), 0)
+        keycodes = []
+        if (args.delay):
+           time.sleep(int(args.delay))
+
+if args.enter:
+    keycodes = [28]
+    dom.sendKey(0, 0, keycodes, len(keycodes), 0)
+
