@@ -6,6 +6,8 @@ import sys
 import time
 import argparse
 import io
+import cv2
+import pytesseract
 from io import StringIO
 from io import BytesIO
 from PIL import Image
@@ -32,6 +34,9 @@ parser.add_argument("--server", help="Libvirt Server URI")
 parser.add_argument("--vm", help="Libvirt Server URI")
 parser.add_argument("--outputfile", help="Save screenshot in file", default='')
 parser.add_argument("--sixel", help="Render screenshot in terminal via sixel",action='store_true')
+parser.add_argument("--ocr", help="Extract text from screenshot with Tesseract",action='store_true')
+parser.add_argument("--ocr-psm", help="Page segmentation mode",default='')
+parser.add_argument("--ocr-whitelist", help="Allowed characters list",default='')
 
 args = parser.parse_args()
 
@@ -91,3 +96,13 @@ if args.sixel:
     #encoder.encode('1.png')
     #render sixel image (in current terminal)
     encoder.encode(args.vm+'.png')
+
+if args.ocr:
+    custom_config=''
+    if args.ocr_psm:
+        custom_config+=' --psm '+args.ocr_psm
+    if args.ocr_whitelist:
+        custom_config+=" -c tessedit_char_whitelist=\""+args.ocr_whitelist+"\""
+    gray=cv2.cvtColor(cv2.imread(args.vm+'.png'), cv2.COLOR_BGR2GRAY)
+    text = pytesseract.image_to_string(gray, config=custom_config, lang='eng')
+    print(text)

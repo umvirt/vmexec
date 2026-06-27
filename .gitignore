@@ -1,5 +1,3 @@
 samples/*/config.sh
 samples/README.html
-samples/screen/*.png
-samples/screen/*.pnm
 README.html

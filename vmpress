@@ -23,6 +23,10 @@ parser.add_argument("--enter", help="send Enter after typing", action='store_tru
 parser.add_argument("--rightshift", help="use Right Shift key for upper case", action='store_true')
 parser.add_argument("--delay", help="make a delay after typing a character (in seconds)", default='0')
 parser.add_argument("--verbose", help="debug mode", action='store_true')
+parser.add_argument("--upkey", help="send Uo key", action='store_true')
+parser.add_argument("--downkey", help="send Down key", action='store_true')
+parser.add_argument("--leftkey", help="send Left key", action='store_true')
+parser.add_argument("--rightkey", help="send Right key", action='store_true')
 
 args = parser.parse_args()
 
@@ -166,6 +170,25 @@ if (args.text):
         keycodes = []
         if (args.delay):
            time.sleep(int(args.delay))
+
+
+if args.upkey:
+    keycodes = [103]
+    dom.sendKey(0, 0, keycodes, len(keycodes), 0)
+
+if args.downkey:
+    keycodes = [108]
+    dom.sendKey(0, 0, keycodes, len(keycodes), 0)
+
+if args.leftkey:
+    keycodes = [105]
+    dom.sendKey(0, 0, keycodes, len(keycodes), 0)
+
+if args.rightkey:
+    keycodes = [106]
+    dom.sendKey(0, 0, keycodes, len(keycodes), 0)
+
+
 
 if args.enter:
     keycodes = [28]

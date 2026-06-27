@@ -2,7 +2,7 @@
 
 Utilities to interact with VMs via serial console and keyboard using Libvirt API.
 
-Version: 0.3
+Version: 0.4
 
 License: GPL
 
@@ -47,7 +47,10 @@ VMexec can be used for:
 
 - [Python Pillow module](https://pypi.org/project/pillow) (to convert screenshots from PNM to PNG)
 - [libsixel](https://github.com/saitoha/libsixel) with Python module (to render screenshots in terminal)
-- KDE Konsole or other terminal with libsixel support (others can't render screenshots in terminal)
+- [KDE Konsole](https://kde.org/) or other terminal with libsixel support (others can't render screenshots in terminal)
+- [OpenCV](https://opencv.org/) (to prepare images for OCR)
+- [Tesseract](https://github.com/tesseract-ocr/tesseract)(to convert screenshots to text)
+- [Pytesseract](https://pypi.org/project/pytesseract/) Tesseract Python wrapper
 
 ## Preparation
 

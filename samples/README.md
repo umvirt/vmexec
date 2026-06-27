@@ -71,3 +71,25 @@ This samples uses FreeDOS VM which created for Keyoard samples.
 - shot.sh - Save a VM screenshot in PNG format
 - sixelshot.sh - render a VM screenshot in current terminal via Sixel protocol
 - sixel.sh - a Sixel protocol demo with keyboard interaction
+- ocr.sh - screenshot capture and extract text with OCR
+- ocrloop.sh - same as ocr.sh but in infinite loop.
+
+### FreeDOS installation
+
+#### Preparation
+
+Prepare virtual machine called "freedosinstall"
+
+Prepare hard disk (IDE)
+
+    qemu-img create -f qcow2 freedosinstall.qcow2 1G
+
+Add CD-ROM. Insert FreeDOS 1.4 LiveCD
+
+Configure VM to boot from CD.
+
+#### Runing
+
+Start a VM and run ./freedosinstall.sh script.
+
+
